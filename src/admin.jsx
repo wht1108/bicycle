@@ -5,16 +5,18 @@ import Footer from "./compontents/footer";
 import "./style/common.less";
 const Admin = (props) => {
     return (
-            <Row className="containter">
-                <Col span={4} className="nav-left">
-                     <NavLeft></NavLeft>
-                </Col>
-                <Col span={20} className="main">
-                    <Header></Header>
-                    <div className="content">{props.children}</div>
-                    <Footer></Footer>
-                </Col>
-            </Row>
+        <Row className="containter">
+            <Col span={4} className="nav-left">
+                <NavLeft></NavLeft>
+            </Col>
+            <Col span={20} className="main">
+                <Header></Header>
+                <Row className="content">
+                    {props.children}
+                </Row>
+                <Footer></Footer>
+            </Col>
+        </Row>
     );
 }
 
