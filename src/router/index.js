@@ -3,6 +3,7 @@ import { HashRouter as Router, Switch } from "react-router-dom";
 import Admin from "../admin";
 import App from "../App";
 import Home from "../pages/home"
+import City from "../pages/city";
 import Nomatch from "../pages/nomatch";
 const Routers = () => {
     return (
@@ -13,6 +14,7 @@ const Routers = () => {
                         <Admin>
                             <Switch>
                                 <Route path="/home" component={Home} />
+                                <Route path="/city" component={City}></Route>
                                 <Route component={Nomatch} />
                             </Switch>
                         </Admin>
