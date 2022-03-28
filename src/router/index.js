@@ -9,6 +9,7 @@ import OrderDetail from "../pages/order/detail";
 import Common from "../common";
 import User from "../pages/user";
 import Map from "../pages/map";
+import Bar from "../pages/bar";
 import Nomatch from "../pages/nomatch";
 const Routers = () => {
     return (
@@ -28,6 +29,7 @@ const Routers = () => {
                                 <Route path="/order" component={Order}></Route>
                                 <Route path="/user" component={User}></Route>
                                 <Route path="/bikeMap" component={Map}></Route>
+                                <Route path="/bar" component={Bar}></Route>
                                 <Route component={Nomatch} />
                             </Switch>
                         </Admin>
