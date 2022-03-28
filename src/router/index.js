@@ -7,6 +7,7 @@ import City from "../pages/city";
 import Order from "../pages/order";
 import OrderDetail from "../pages/order/detail";
 import Common from "../common";
+import User from "../pages/user";
 import Nomatch from "../pages/nomatch";
 const Routers = () => {
     return (
@@ -24,6 +25,7 @@ const Routers = () => {
                                 <Route path="/home" component={Home} />
                                 <Route path="/city" component={City}></Route>
                                 <Route path="/order" component={Order}></Route>
+                                <Route path="/user" component={User}></Route>
                                 <Route component={Nomatch} />
                             </Switch>
                         </Admin>
