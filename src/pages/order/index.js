@@ -10,8 +10,11 @@ const Order = () => {
     const [dataSource, setDataSource] = useState([]);
     const [pagination, setPagination] = useState(false);
     const [flag, setFlag] = useState(true);
-    const[rowKey,setRowKey]=useState([]);
-    const [rowItem,setRowItem]=useState({});
+    const [rowKey, setRowKey] = useState([]);
+    const [rowItem, setRowItem] = useState({});
+    //用车订单信息
+    const [bikeInfo, setBikeInfo] = useState([]);
+    const [showInfo, setShowInfo] = useState(false);
     useEffect(() => {
         Axios.ajax({
             url: "/order/list",
@@ -33,36 +36,50 @@ const Order = () => {
         const search = form.current.getFieldsValue();
         // console.log(form);
         Axios.ajax({
-            url:"/order/list",
-            data:{params:search}
-        }).then(res=>{
-            if(res.code===0){
+            url: "/order/list",
+            data: { params: search }
+        }).then(res => {
+            if (res.code === 0) {
                 setFlag(!flag);
             }
         })
-    } 
-    // 点击行事件
-    const onhaddleClickRow=(record,index)=>{
-            let key=[index];
-             setRowKey(key);
-             setRowItem(record);
     }
-    const onhandleFinish=()=>{
-        if(!rowItem.id){
+    // 点击行事件
+    const onhaddleClickRow = (record, index) => {
+        let key = [index];
+        setRowKey(key);
+        setRowItem(record);
+    }
+    const onhandleFinish = () => {
+        if (!rowItem.id) {
             Modal.info({
-                title:"提示",
-                content:"请选择要结束的订单"
+                title: "提示",
+                content: "请选择要结束的订单"
             })
             return;
         }
         Axios.ajax({
-            url:"/finish_order",
-            data:{params:{itemId:rowItem.id}}
-        }).then(res=>{
-            if(res.code===0){
-                message.success("订单结束成功")
-                setFlag(!flag);
+            url: "/order/ebike_info",
+            data: { params: { itemId: rowItem.id } }
+        }).then(res => {
+            if (res.code === 0) {
+                setBikeInfo(res.result);
+                setShowInfo(true);
+
             }
+        })
+    }
+    //确认结束用车订单
+    const onOk = () => {
+        Axios.ajax({
+            url: "/finish_order",
+            data: { params: { itemId: showInfo.bike_sn } }
+        }).then(res => {
+            message.success("订单结束成功")
+            setShowInfo(false);
+            setRowKey([]);
+            setFlag(!flag);
+
         })
     }
     const columns = [
@@ -84,19 +101,33 @@ const Order = () => {
         { title: "订单金额", dataIndex: "total_fee", align: "center", width: 100 },
         { title: "实付金额", dataIndex: "user_pay", align: "center", width: 100 },
     ];
-    //单选按钮配置
-    const rowSelection={
-        type:"radio",
-        selectedRowKeys:rowKey
+    //订单详情
+    const onhandleDetail=()=>{
+        if (!rowItem.id) {
+            Modal.info({
+                title: "提示",
+                content: "请选择订单"
+            })
+            return;
+        }
+        window.open(`/#/common/order/detail/${rowItem.id}`,"_blank");
     }
-
+    //单选按钮配置
+    const rowSelection = {
+        type: "radio",
+        selectedRowKeys: rowKey
+    }
+   const formItemLayout={
+       labelCol:{span:5},
+       wrapperCol:{span:19},
+   }
     return (
         <div style={{ width: "100%" }}>
             <Card>
                 <FormList ref={form} onHaddleSearch={onHaddleSearch} />
             </Card>
             <Card style={{ marginTop: 10 }}>
-                <Button type="primary" style={{ margin: "0 20px" }}>订单详情</Button>
+                <Button type="primary" style={{ margin: "0 20px" }} onClick={onhandleDetail}>订单详情</Button>
                 <Button type="primary" onClick={onhandleFinish}>结束订单</Button>
             </Card>
             <div className="content-wrap">
@@ -106,11 +137,23 @@ const Order = () => {
                     dataSource={dataSource}
                     pagination={pagination}
                     rowSelection={rowSelection}
-                    onRow={(record,index)=>({
-                        onClick:e=>{onhaddleClickRow(record,index)},
+                    onRow={(record, index) => ({
+                        onClick: e => { onhaddleClickRow(record, index) },
                     })}
                 />
             </div>
+            <Modal
+                title="结束订单"
+                visible={showInfo}
+                onCancel={() => { setShowInfo(false) }}
+                onOk={onOk}
+            >
+                <Form.Item label="车辆编号" {...formItemLayout}>{bikeInfo.bike_sn}</Form.Item>
+                <Form.Item label="剩余电量" {...formItemLayout}>{bikeInfo.battery}%</Form.Item>
+                <Form.Item label="行程开始时间" {...formItemLayout}>{bikeInfo.start_time}</Form.Item>
+                <Form.Item label="当前位置" {...formItemLayout}>{bikeInfo.location}</Form.Item>
+
+            </Modal>
         </div>
     );
 }
@@ -141,7 +184,7 @@ const FormList = forwardRef((props, ref) => {
             </Form.Item>
             <Form.Item>
                 <Button style={{ margin: "0 20px" }} type="primary" onClick={onHaddleSearch}>查询</Button>
-                <Button onClick={()=>ref.current.resetFields()}>重置</Button>
+                <Button onClick={() => ref.current.resetFields()}>重置</Button>
             </Form.Item>
         </Form>
     )

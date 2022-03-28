@@ -5,12 +5,19 @@ import App from "../App";
 import Home from "../pages/home"
 import City from "../pages/city";
 import Order from "../pages/order";
+import OrderDetail from "../pages/order/detail";
+import Common from "../common";
 import Nomatch from "../pages/nomatch";
 const Routers = () => {
     return (
         <Router>
             <App>
                 <Switch>
+                    <Route path="/common" render={() =>
+                        <Common>
+                            <Route path="/common/order/detail/:orderId" component={OrderDetail} />
+                        </Common>
+                    } />
                     <Route path="/" render={() =>
                         <Admin>
                             <Switch>
@@ -21,6 +28,7 @@ const Routers = () => {
                             </Switch>
                         </Admin>
                     } />
+
                 </Switch>
             </App>
         </Router>

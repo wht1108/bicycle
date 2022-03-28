@@ -3,7 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Utils from "../../utils/utils.js"
 import "./index.less";
-const Header = () => {
+const Header = (props) => {
     // const [weather,setWeather]=useState({});
     // useEffect(()=>{
     //     axios.get("https://devapi.qweather.com/v7/weather/now?location=101091101&key=fc482e17ef3c4151a0fcb989196e82d8")
@@ -12,6 +12,7 @@ const Header = () => {
     //         setWeather(res.data.now);
     //     })
     // })
+    const { menuType } = props;
     const [time, setTime] = useState("");
     useEffect(() => {
         setInterval(() => {
@@ -22,24 +23,35 @@ const Header = () => {
     return (
         <div className="header">
             <Row className="header-top">
-                <Col span={24}>
+                {
+                    menuType ?
+                        <Col span={6} className="logo">
+                            <img src="/assets/logo-ant.svg" ></img>
+                            <span>Bike 通用管理系统</span>
+                        </Col> : null
+                }
+                <Col span={menuType ? 18 : 24}>
                     <span>欢迎，秦皇岛 海港区</span>
-                    <a href="#">退出</a>
+                    <a href="#" className={menuType ? menuType : ""}>退出</a>
                 </Col>
             </Row>
-            <Row className="breadcrumb">
-                <Col span={4} className="breadcrumb-title">首页</Col>
-                <Col span={20} className="weather">
-                    <span className="date">{time}</span>
-                    <span className="weather-img">
-                        <i className="qi-100"></i>
-                        {/* {weather.text} */}
-                    </span>
-                    <span className="weather-detail">
-                        晴
-                    </span>
-                </Col>
-            </Row>
+            {
+                menuType ? null :
+                    <Row className="breadcrumb">
+                        <Col span={4} className="breadcrumb-title">首页</Col>
+                        <Col span={20} className="weather">
+                            <span className="date">{time}</span>
+                            <span className="weather-img">
+                                <i className="qi-100"></i>
+                                {/* {weather.text} */}
+                            </span>
+                            <span className="weather-detail">
+                                晴
+                            </span>
+                        </Col>
+                    </Row>
+            }
+
         </div>
     );
 }
