@@ -12,8 +12,12 @@ import Map from "../pages/map";
 import Bar from "../pages/bar";
 import Permission from "../pages/permission";
 import Nomatch from "../pages/nomatch";
+import { Provider } from "react-redux";
+import {store} from "../redux/store";
 const Routers = () => {
+   
     return (
+        <Provider store={store}>
         <Router>
             <App>
                 <Switch>
@@ -41,6 +45,7 @@ const Routers = () => {
                 </Switch>
             </App>
         </Router>
+        </Provider>
     );
 }
 

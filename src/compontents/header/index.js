@@ -1,6 +1,7 @@
 import { Col, Row } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { connect } from "react-redux";
 import Utils from "../../utils/utils.js"
 import "./index.less";
 const Header = (props) => {
@@ -12,7 +13,7 @@ const Header = (props) => {
     //         setWeather(res.data.now);
     //     })
     // })
-    const { menuType } = props;
+    const { menuType,menuName } = props;
     const [time, setTime] = useState("");
     useEffect(() => {
         setInterval(() => {
@@ -38,7 +39,7 @@ const Header = (props) => {
             {
                 menuType ? null :
                     <Row className="breadcrumb">
-                        <Col span={4} className="breadcrumb-title">首页</Col>
+                        <Col span={4} className="breadcrumb-title">{menuName}</Col>
                         <Col span={20} className="weather">
                             <span className="date">{time}</span>
                             <span className="weather-img">
@@ -55,5 +56,7 @@ const Header = (props) => {
         </div>
     );
 }
-
-export default Header;
+const mapStateToProps=(state)=>({
+    menuName:state.menuName,
+})
+export default connect(mapStateToProps)(Header);
